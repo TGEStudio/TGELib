@@ -1,0 +1,11 @@
+{
+	"name": "com.tgestudio.tgelib",
+	"version": "0.1",
+	"displayName": "TGE Library",
+	"description": "TGE Dev Library",
+	"author": {
+	  "name": "TGE Studio",
+	  "email": "vuchitrung.dev@gmail.com"
+	}
+  }
+  
