@@ -15,12 +15,15 @@ namespace TGElib.Grid
         private Sprite gridSpriteIn;
         [SerializeField]
         private Sprite gridSpriteOut;
-        private List<Grid> _grids = new List<Grid>();
-        public List<Grid> grids { get { return _grids; } }
+        private List<GridBase> _grids = new List<GridBase>();
 
         void Start()
         {
             Spawn();
+        }
+        public List<GridBase> GetAllGrid()
+        {
+            return _grids;
         }
 
         public void Spawn()
@@ -40,7 +43,7 @@ namespace TGElib.Grid
 
             if (gridObj.TryGetComponent<GridDisplay>(out GridDisplay gridDisplay))
             {
-                Grid grid = new Grid(spawnPos, spawnSprite);
+                GridBase grid = new GridBase(spawnPos, spawnSprite);
                 _grids.Add(grid);
                 gridDisplay.grid = grid;
             }

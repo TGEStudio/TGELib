@@ -7,45 +7,41 @@ using TGElib.Grid;
 
 namespace TGElib.Movement
 {
-    public class MovementLogic : MonoBehaviour
+    public class MovementLogic
     {
-        [SerializeField]
-        protected GridSpawner gridSpawner;
-        private List<Tile> openTile = new List<Tile>();
-        private List<Tile> closedTile = new List<Tile>();
-        [SerializeField]
-        protected Obstacle[] obstacleTile;
+        private List<Obstacle> _obstacleTile = new List<Obstacle>();
+        public List<Obstacle> obstacleTile { get { return _obstacleTile; } set { _obstacleTile = value; } }
 
-        protected List<Tile> ProcessingPath(Vector2 startPosition, Vector2 targetPosition)
+        private List<GridNode> openTile = new List<GridNode>();
+        private List<GridNode> closedTile = new List<GridNode>();
+
+        public List<GridNode> ProcessingPath(Vector2 startPosition, Vector2 targetPosition, List<GridBase> grids)
         {
-            Vector2Int startingPos = new Vector2Int((int)startPosition.x, (int)startPosition.y);
-            Vector2Int targetPos = new Vector2Int((int)targetPosition.x, (int)targetPosition.y);
-
-            openTile.Add(new Tile() { pos = startingPos, g = 0, h = CalculateH(startingPos, targetPos), parent = null });
+            openTile.Add(new GridNode(startPosition) { g = 0, h = CalculateH(startPosition, targetPosition), parent = null });
             openTile[0].CalculateF();
 
             while (openTile.Count > 0)
             {
                 //Get lowest f in open tile
-                Tile q = openTile.OrderBy(tile => tile.f).First();
-                if (q.pos == targetPos)
+                GridNode q = openTile.OrderBy(tile => tile.f).First();
+                if (q.gPos == targetPosition)
                     return RetracePath(q);
                 closedTile.Add(q);
                 openTile.Remove(q);
 
-                foreach (var s in CreateS(q.pos, q))
+                foreach (var s in CreateS(q.gPos, q, grids))
                 {
-                    if (closedTile.Any(r => r.pos == s.pos)) continue;
+                    if (closedTile.Any(r => r.gPos == s.gPos)) continue;
 
-                    float tentativeG = CalculateG(q, s.dirFrom);
-                    Tile existingOpenTile = openTile.FirstOrDefault(r => r.pos == s.pos);
+                    float tentativeG = CalculateG(q, s.GetMoveCost());
+                    GridNode existingOpenTile = openTile.FirstOrDefault(r => r.gPos == s.gPos);
 
                     // If the tile is already in the open list and the tentative g is not better, skip.
                     if (existingOpenTile != null && tentativeG >= existingOpenTile.g)
                         continue;
 
                     s.g = tentativeG;
-                    s.h = CalculateH(s.pos, targetPos);
+                    s.h = CalculateH(s.gPos, targetPosition);
                     s.CalculateF();
                     s.parent = q;
 
@@ -62,14 +58,14 @@ namespace TGElib.Movement
                     }
                 }
             }
-            return new List<Tile>();
+            return new List<GridNode>();
         }
-        List<Tile> RetracePath(Tile endTile)
+        List<GridNode> RetracePath(GridNode endTile)
         {
-            List<Tile> path = new List<Tile>();
+            List<GridNode> path = new List<GridNode>();
 
             path.Add(endTile);
-            Tile currentTile = endTile;
+            GridNode currentTile = endTile;
             while (currentTile.parent != null)
             {
                 path.Add(currentTile.parent);
@@ -78,26 +74,26 @@ namespace TGElib.Movement
             path.Reverse();
             return path;
         }
-        List<Tile> CreateS(Vector2Int parentTilePos, Tile parentTile)
+        List<GridNode> CreateS(Vector2 parentTilePos, GridNode parentTile, List<GridBase> grids)
         {
-            List<Tile> temp = new List<Tile>();
+            List<GridNode> temp = new List<GridNode>();
             foreach (Direction direction in Enum.GetValues(typeof(Direction)))
             {
-                Vector2Int dirVec = DirHelper.GetVecFromDir(direction);
-                int x = parentTilePos.x + dirVec.x;
-                int y = parentTilePos.y + dirVec.y;
+                Vector2 dirVec = DirHelper.GetVecFromDir(direction);
+                float x = parentTilePos.x + dirVec.x;
+                float y = parentTilePos.y + dirVec.y;
 
-                Vector2Int sPos = new Vector2Int(x, y);
-                if (!gridSpawner.grids.Any(r => r.gPos == sPos)) continue;
+                Vector2 sPos = new Vector2(x, y);
+                if (!grids.Any(r => r.gPos == sPos)) continue;
 
-                if (obstacleTile.Any(r => r.pos == sPos)) continue;
+                if (_obstacleTile.Any(r => r.pos == sPos)) continue;
 
-                temp.Add(new Tile() { pos = sPos, parent = parentTile, dirFrom = direction });
+                temp.Add(new GridNode(sPos, direction) { parent = parentTile });
             }
             return temp;
         }
 
-        float CalculateG(Tile parentTile, Direction dir)
+        float CalculateG(GridNode parentTile, Direction dir)
         {
             return parentTile.g + DirHelper.GetCostFromDir(dir);
         }
