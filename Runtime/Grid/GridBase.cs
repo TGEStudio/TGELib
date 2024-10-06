@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TGElib.Grid
+namespace TGELib.Grid
 {
     public class GridBase
     {

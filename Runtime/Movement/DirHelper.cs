@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TGElib.Movement
+namespace TGELib.Movement
 {
     public static class DirHelper
     {

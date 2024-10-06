@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TGElib.Grid
+namespace TGELib.Grid
 {
     public class GridSpawner : MonoBehaviour
     {

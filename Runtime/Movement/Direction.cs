@@ -1,4 +1,4 @@
-namespace TGElib.Movement
+namespace TGELib.Movement
 {
     public enum Direction
     {

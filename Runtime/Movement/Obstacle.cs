@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace TGElib.Movement
+namespace TGELib.Movement
 {
     [Serializable]
     public class Obstacle

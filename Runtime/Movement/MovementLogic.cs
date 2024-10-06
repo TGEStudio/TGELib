@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System;
-using TGElib.Grid;
+using TGELib.Grid;
 
 
-namespace TGElib.Movement
+namespace TGELib.Movement
 {
     public class MovementLogic
     {

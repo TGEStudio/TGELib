@@ -1,7 +1,7 @@
-using TGElib.Movement;
+using TGELib.Movement;
 using UnityEngine;
 
-namespace TGElib.Grid
+namespace TGELib.Grid
 {
     public class GridNode : GridBase
     {
@@ -20,7 +20,7 @@ namespace TGElib.Grid
         public GridNode(Vector2 gPos) : base(gPos, null)
         { }
         public GridNode(Vector2 gPos, Direction dirFrom) : base(gPos, null)
-        { 
+        {
             _dirFrom = dirFrom;
         }
 
