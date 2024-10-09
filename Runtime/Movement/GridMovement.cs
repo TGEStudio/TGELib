@@ -17,8 +17,12 @@ namespace TGELib.Movement
 
         public List<GridNode> ProcessingPath(Vector2 startPosition, Vector2 targetPosition, List<GridBase> grids)
         {
+            openTile = new List<GridNode>();
+            closedTile = new List<GridNode>();
+
             openTile.Add(new GridNode(startPosition) { g = 0, h = CalculateH(startPosition, targetPosition), parent = null });
             openTile[0].CalculateF();
+
 
             while (openTile.Count > 0)
             {
@@ -58,7 +62,7 @@ namespace TGELib.Movement
                     }
                 }
             }
-            return new List<GridNode>();
+            return null;
         }
         List<GridNode> RetracePath(GridNode endTile)
         {
