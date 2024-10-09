@@ -7,10 +7,10 @@ using TGELib.Grid;
 
 namespace TGELib.Movement
 {
-    public class MovementLogic
+    public class GridMovement
     {
-        private List<Obstacle> _obstacleTile = new List<Obstacle>();
-        public List<Obstacle> obstacleTile { get { return _obstacleTile; } set { _obstacleTile = value; } }
+        private GridManager _obstacleTile;
+        public GridManager obstacleTile { get { return _obstacleTile; } set { _obstacleTile = value; } }
 
         private List<GridNode> openTile = new List<GridNode>();
         private List<GridNode> closedTile = new List<GridNode>();
@@ -86,7 +86,7 @@ namespace TGELib.Movement
                 Vector2 sPos = new Vector2(x, y);
                 if (!grids.Any(r => r.gPos == sPos)) continue;
 
-                if (_obstacleTile.Any(r => r.pos == sPos)) continue;
+                if (_obstacleTile.GetGrids().Any(r => r.gPos == sPos)) continue;
 
                 temp.Add(new GridNode(sPos, direction) { parent = parentTile });
             }
