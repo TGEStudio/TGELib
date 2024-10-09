@@ -86,7 +86,8 @@ namespace TGELib.Movement
                 Vector2 sPos = new Vector2(x, y);
                 if (!grids.Any(r => r.gPos == sPos)) continue;
 
-                if (_obstacleTile.GetGrids().Any(r => r.gPos == sPos)) continue;
+                if (_obstacleTile != null)
+                    if (_obstacleTile.GetGrids().Any(r => r.gPos == sPos)) continue;
 
                 temp.Add(new GridNode(sPos, direction) { parent = parentTile });
             }
