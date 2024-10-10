@@ -3,10 +3,10 @@ using UnityEngine;
 
 namespace TGELib.Grid
 {
-    public class GridNode : GridBase
+    public class TileNode : TileBase
     {
-        private GridNode _parent;
-        public GridNode parent { get { return _parent; } set { _parent = value; } }
+        private TileNode _parent;
+        public TileNode parent { get { return _parent; } set { _parent = value; } }
         private Direction _dirFrom;
 
         private float _g;
@@ -17,9 +17,9 @@ namespace TGELib.Grid
         public float h { get { return _h; } set { _h = value; } }
         public float f { get { return _f; } set { _f = value; } }
 
-        public GridNode(Vector2 gPos) : base(gPos, null)
+        public TileNode(Vector2 tPos) : base(tPos, null)
         { }
-        public GridNode(Vector2 gPos, Direction dirFrom) : base(gPos, null)
+        public TileNode(Vector2 tPos, Direction dirFrom) : base(tPos, null)
         {
             _dirFrom = dirFrom;
         }

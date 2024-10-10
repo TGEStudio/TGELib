@@ -2,11 +2,11 @@ using UnityEngine;
 
 namespace TGELib.Grid
 {
-    public class GridDisplay : MonoBehaviour
+    public class TileDisplay : MonoBehaviour
     {
-        private GridBase _grid;
+        private TileBase _tile;
         private SpriteRenderer _spriteRenderer;
-        public GridBase grid { get { return _grid; } set { _grid = value; } }
+        public TileBase tile { get { return _tile; } set { _tile = value; } }
 
         void Start()
         {
@@ -14,7 +14,7 @@ namespace TGELib.Grid
         }
         void Update()
         {
-            _spriteRenderer.sprite = _grid.gSprite;
+            _spriteRenderer.sprite = _tile.gSprite;
         }
     }
 }

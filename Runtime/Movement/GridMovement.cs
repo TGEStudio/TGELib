@@ -12,22 +12,22 @@ namespace TGELib.Movement
         private GridManager _obstacleTile;
         public GridManager obstacleTile { get { return _obstacleTile; } set { _obstacleTile = value; } }
 
-        private List<GridNode> openTile = new List<GridNode>();
-        private List<GridNode> closedTile = new List<GridNode>();
+        private List<TileNode> openTile = new List<TileNode>();
+        private List<TileNode> closedTile = new List<TileNode>();
 
-        public List<GridNode> ProcessingPath(Vector2 startPosition, Vector2 targetPosition, List<GridBase> grids)
+        public List<TileNode> ProcessingPath(Vector2 startPosition, Vector2 targetPosition, List<TileBase> grids)
         {
-            openTile = new List<GridNode>();
-            closedTile = new List<GridNode>();
+            openTile = new List<TileNode>();
+            closedTile = new List<TileNode>();
 
-            openTile.Add(new GridNode(startPosition) { g = 0, h = CalculateH(startPosition, targetPosition), parent = null });
+            openTile.Add(new TileNode(startPosition) { g = 0, h = CalculateH(startPosition, targetPosition), parent = null });
             openTile[0].CalculateF();
 
 
             while (openTile.Count > 0)
             {
                 //Get lowest f in open tile
-                GridNode q = openTile.OrderBy(tile => tile.f).First();
+                TileNode q = openTile.OrderBy(tile => tile.f).First();
                 if (q.gPos == targetPosition)
                     return RetracePath(q);
                 closedTile.Add(q);
@@ -38,7 +38,7 @@ namespace TGELib.Movement
                     if (closedTile.Any(r => r.gPos == s.gPos)) continue;
 
                     float tentativeG = CalculateG(q, s.GetMoveCost());
-                    GridNode existingOpenTile = openTile.FirstOrDefault(r => r.gPos == s.gPos);
+                    TileNode existingOpenTile = openTile.FirstOrDefault(r => r.gPos == s.gPos);
 
                     // If the tile is already in the open list and the tentative g is not better, skip.
                     if (existingOpenTile != null && tentativeG >= existingOpenTile.g)
@@ -64,12 +64,12 @@ namespace TGELib.Movement
             }
             return null;
         }
-        List<GridNode> RetracePath(GridNode endTile)
+        List<TileNode> RetracePath(TileNode endTile)
         {
-            List<GridNode> path = new List<GridNode>();
+            List<TileNode> path = new List<TileNode>();
 
             path.Add(endTile);
-            GridNode currentTile = endTile;
+            TileNode currentTile = endTile;
             while (currentTile.parent != null)
             {
                 path.Add(currentTile.parent);
@@ -78,9 +78,9 @@ namespace TGELib.Movement
             path.Reverse();
             return path;
         }
-        List<GridNode> CreateS(Vector2 parentTilePos, GridNode parentTile, List<GridBase> grids)
+        List<TileNode> CreateS(Vector2 parentTilePos, TileNode parentTile, List<TileBase> grids)
         {
-            List<GridNode> temp = new List<GridNode>();
+            List<TileNode> temp = new List<TileNode>();
             foreach (Direction direction in Enum.GetValues(typeof(Direction)))
             {
                 Vector2 dirVec = DirHelper.GetVecFromDir(direction);
@@ -91,14 +91,14 @@ namespace TGELib.Movement
                 if (!grids.Any(r => r.gPos == sPos)) continue;
 
                 if (_obstacleTile != null)
-                    if (_obstacleTile.GetGrids().Any(r => r.gPos == sPos)) continue;
+                    if (_obstacleTile.GetTiles().Any(r => r.gPos == sPos)) continue;
 
-                temp.Add(new GridNode(sPos, direction) { parent = parentTile });
+                temp.Add(new TileNode(sPos, direction) { parent = parentTile });
             }
             return temp;
         }
 
-        float CalculateG(GridNode parentTile, Direction dir)
+        float CalculateG(TileNode parentTile, Direction dir)
         {
             return parentTile.g + DirHelper.GetCostFromDir(dir);
         }
